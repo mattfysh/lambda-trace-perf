@@ -5,7 +5,7 @@ import { Lambda } from '@aws-sdk/client-lambda'
 
 const lambda = new Lambda()
 
-const REPEAT = 2
+const REPEAT = 4
 
 const runTS = Date.now()
 const runDir = `bench/run-${runTS}`

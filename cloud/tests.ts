@@ -4,24 +4,24 @@ import { layer } from './ext'
 const REGION = 'ap-southeast-2'
 
 export const tests: Spec[] = [
-  // {
-  //   id: 'baseline-notrace',
-  //   notrace: true,
-  // },
-  // {
-  //   id: 'baseline',
-  // },
-  // {
-  //   id: 'ext-added',
-  //   layers: [layer.arn],
-  // },
-  // {
-  //   id: 'ext-active',
-  //   layers: [layer.arn],
-  //   variables: {
-  //     TRACEPERF_EXT: '1',
-  //   },
-  // },
+  {
+    id: 'baseline-notrace',
+    notrace: true,
+  },
+  {
+    id: 'baseline',
+  },
+  {
+    id: 'ext-added',
+    layers: [layer.arn],
+  },
+  {
+    id: 'ext-active',
+    layers: [layer.arn],
+    variables: {
+      TRACEPERF_EXT: '1',
+    },
+  },
   {
     id: 'xray-sdk-span',
   },
