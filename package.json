@@ -1,0 +1,25 @@
+{
+    "name": "traceperf",
+    "main": "cloud/index.ts",
+    "scripts": {
+        "build": "sh scripts/build.sh",
+        "deploy": "npm run build && pulumi up --yes",
+        "bench": "node scripts/benchmark.mjs"
+    },
+    "devDependencies": {
+        "@aws-sdk/client-lambda": "^3.299.0",
+        "@types/node": "^16",
+        "aws-xray-sdk": "^3.4.1",
+        "esbuild": "^0.17.12",
+        "execa": "^7.1.1",
+        "uuid": "^9.0.0"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^5.0.0",
+        "@pulumi/pulumi": "^3.0.0"
+    },
+    "prettier": {
+        "semi": false,
+        "singleQuote": true
+    }
+}

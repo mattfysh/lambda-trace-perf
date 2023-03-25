@@ -1,0 +1,4 @@
+#!/bin/bash
+export NODE_PATH="/var/runtime/node_modules"
+echo "Launching Traceperf Extension..."
+exec /opt/traceperf-ext/index.js
