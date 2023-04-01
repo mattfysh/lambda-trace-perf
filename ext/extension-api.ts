@@ -1,3 +1,6 @@
+import * as http from 'node:http'
+import * as consumers from 'node:stream/consumers'
+
 const apiHost = process.env['AWS_LAMBDA_RUNTIME_API']
 const baseUrl = `http://${apiHost}/2020-01-01/extension`
 
@@ -23,20 +26,31 @@ async function register(events: string[]) {
 }
 
 async function next(extensionId: string) {
-  const res = await fetch(`${baseUrl}/event/next`, {
-    method: 'get',
+  // the native fetch implemented in node has a non-configurable
+  // 5 minute timeout, so the http.get client is used instead
+  const req = http.get(`${baseUrl}/event/next`, {
     headers: {
-      'Content-Type': 'application/json',
       'Lambda-Extension-Identifier': extensionId,
     },
   })
 
-  if (!res.ok) {
-    console.error('next failed', await res.text())
-    return null
-  }
+  return new Promise((resolve, reject) => {
+    req.on('error', reject)
+    req.on('response', async (res) => {
+      res.on('error', reject)
 
-  return await res.json()
+      let text: string = ''
+      try {
+        text = await consumers.text(res)
+      } catch (e) {}
+
+      if (res.statusCode !== 200) {
+        reject(new Error(`Next failed: ${text}`))
+      }
+
+      resolve(JSON.parse(text))
+    })
+  })
 }
 
 export default {

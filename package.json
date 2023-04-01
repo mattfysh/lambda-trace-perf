@@ -8,7 +8,8 @@
     },
     "devDependencies": {
         "@aws-sdk/client-lambda": "^3.299.0",
-        "@types/node": "^16",
+        "@types/node": "^18",
+        "@types/node-fetch": "^2.6.2",
         "aws-xray-sdk": "^3.4.1",
         "esbuild": "^0.17.12",
         "execa": "^7.1.1",

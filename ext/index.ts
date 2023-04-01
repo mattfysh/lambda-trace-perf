@@ -3,9 +3,8 @@ import api from './extension-api'
 import { listenerUrl, requestDone } from './telemetry-listener'
 import { subscribe } from './telemetry-api'
 
-const FN_TIMEOUT_GRACE = 500
+const TIMEOUT_CLEANUP_WINDOW = 500
 const EXT_ENABLED = Boolean(process.env['TRACEPERF_EXT'])
-
 
 type LambdaExtEvent = {
   requestId: string
@@ -18,7 +17,7 @@ const EventType = {
 }
 
 async function handleInvoke(event: LambdaExtEvent) {
-  const msLeft = event.deadlineMs - Date.now() + FN_TIMEOUT_GRACE
+  const msLeft = event.deadlineMs - Date.now() - TIMEOUT_CLEANUP_WINDOW
   await requestDone(event.requestId, msLeft)
 }
 
@@ -45,14 +44,16 @@ async function main() {
     await subscribe(extensionId, listenerUrl)
   }
   while (true) {
-    console.log('in loop...')
     const event = await api.next(extensionId)
     await handleEvent(event)
   }
 }
 
-process.on('exit', () => handleShutdown('Event: exit'))
 process.on('SIGINT', () => handleShutdown('SIGINT'))
 process.on('SIGTERM', () => handleShutdown('SIGTERM'))
 
-main()
+main().catch(e => {
+  console.error('MAIN ERROR')
+  console.error(e)
+  throw e
+})
